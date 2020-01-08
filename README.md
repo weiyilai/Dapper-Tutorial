@@ -1,7 +1,7 @@
 # Dapper-Tutorial
 Dapper Tutorial CRUD
 
-Create Database
+## Create Database
 The first step is to create a database using the following script.
 
 IF NOT EXISTS(SELECT * FROM sys.databases WHERE name = 'Tutorial')
