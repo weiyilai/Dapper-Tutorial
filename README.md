@@ -10,7 +10,7 @@ IF NOT EXISTS(SELECT * FROM sys.databases WHERE name = 'Tutorial')
   END
 This script will add a database named Tutorial if it doesn't exist.
 
-Create Table
+## Create Table
 Once the database is created, you can now create a table in the database.
 
 CREATE TABLE [dbo].[Customers] (
