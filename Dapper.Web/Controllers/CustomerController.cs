@@ -28,7 +28,7 @@ namespace Dapper.Web.Controllers
             Customer customer = new Customer();
             using (IDbConnection db = new SqlConnection(WebConfigurationManager.ConnectionStrings["TutorialConnection"].ConnectionString))
             {
-                customer = db.Query<Customer>("Select * From Customers WHERE CustomerID =" + id, new { id }).SingleOrDefault();
+                customer = db.Query<Customer>("Select * From Customers WHERE CustomerID = @id", new { id }).SingleOrDefault();
             }
             return View(customer);
         }
@@ -65,7 +65,7 @@ namespace Dapper.Web.Controllers
             Customer customer = new Customer();
             using (IDbConnection db = new SqlConnection(WebConfigurationManager.ConnectionStrings["TutorialConnection"].ConnectionString))
             {
-                customer = db.Query<Customer>("Select * From Customers WHERE CustomerID =" + id, new { id }).SingleOrDefault();
+                customer = db.Query<Customer>("Select * From Customers WHERE CustomerID = @id", new { id }).SingleOrDefault();
             }
             return View(customer);
         }
@@ -78,12 +78,14 @@ namespace Dapper.Web.Controllers
             {
                 using (IDbConnection db = new SqlConnection(WebConfigurationManager.ConnectionStrings["TutorialConnection"].ConnectionString))
                 {
-                    string sqlQuery = "UPDATE Customers set FirstName='" + customer.FirstName +
-                        "',LastName='" + customer.LastName +
-                        "',Email='" + customer.Email +
-                        "' WHERE CustomerID=" + customer.CustomerID;
+                    string sqlQuery = @"
+UPDATE Customers 
+set FirstName= @FirstName
+,LastName=@LastName
+,Email=@Email
+WHERE CustomerID=@CustomerID";
 
-                    int rowsAffected = db.Execute(sqlQuery);
+                    int rowsAffected = db.Execute(sqlQuery, customer);
                 }
 
                 return RedirectToAction("Index");
@@ -100,7 +102,12 @@ namespace Dapper.Web.Controllers
             Customer customer = new Customer();
             using (IDbConnection db = new SqlConnection(WebConfigurationManager.ConnectionStrings["TutorialConnection"].ConnectionString))
             {
-                customer = db.Query<Customer>("Select * From Customers WHERE CustomerID =" + id, new { id }).SingleOrDefault();
+                customer = 
+                    db.Query<Customer>("Select * From Customers WHERE CustomerID = @id", 
+                        new { 
+                            id 
+                        }).
+                        SingleOrDefault();
             }
             return View(customer);
         }
@@ -113,9 +120,9 @@ namespace Dapper.Web.Controllers
             {
                 using (IDbConnection db = new SqlConnection(WebConfigurationManager.ConnectionStrings["TutorialConnection"].ConnectionString))
                 {
-                    string sqlQuery = "Delete From Customers WHERE CustomerID = " + id;
+                    string sqlQuery = "Delete From Customers WHERE CustomerID = @id";
 
-                    int rowsAffected = db.Execute(sqlQuery);
+                    int rowsAffected = db.Execute(sqlQuery, new { id });
                 }
 
                 return RedirectToAction("Index");
